@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const authRoutes = require("./src/routes/authRoutes");
 const connectDB = require("./src/db");
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.use("/auth", authRoutes);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
