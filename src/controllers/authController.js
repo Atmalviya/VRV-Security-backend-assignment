@@ -9,9 +9,13 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ email, password: hashedPassword });
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+      role: "user",
+    });
     const token = jwt.sign(
-      { email: newUser.email, role: "user" },
+      { email: newUser.email, id: newUser._id, role: newUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "24h" },
     );
@@ -33,7 +37,7 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid crednetials" });
     }
     const token = jwt.sign(
-      { email: user.email, role: user.role },
+      { email: user.email, role: user.role, id: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "24h" },
     );
